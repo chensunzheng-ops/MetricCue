@@ -1,0 +1,39 @@
+name: Diagnostic rule
+description: Propose a new evidence-producing diagnostic rule.
+title: "[Rule]: "
+labels: [diagnostic-rule]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Operational question
+      description: What decision should this rule support?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence contract
+      description: Define inputs, calculation, thresholds, finding ID, confidence, limitations, and missing-data behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: False positives and causal limitations
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Synthetic test case
+      description: Include no secrets, personal data, customer data, or raw platform export.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I used only synthetic or irreversibly anonymized reproduction data.
+          required: true

@@ -1,3 +1,5 @@
+from typing import Literal
+
 import pandas as pd
 
 from metriccue.models import Confidence, Finding, FindingLevel
@@ -62,7 +64,7 @@ def analyze_production(frame: pd.DataFrame, minimum_contents: int = 10) -> list[
         if before == 0 or abs((now - before) / before) < 0.1:
             continue
         change = (now - before) / before
-        direction = "up" if change > 0 else "down"
+        direction: Literal["up", "down"] = "up" if change > 0 else "down"
         findings.append(
             Finding(
                 finding_id=f"{metric}_{direction}_001",

@@ -1,3 +1,5 @@
+from typing import Literal
+
 import numpy as np
 import pandas as pd
 
@@ -72,17 +74,22 @@ def detect_metric_anomalies(
     relative = absolute / baseline_value
     if abs(relative) < 0.1:
         return []
-    daily_values = (
-        current.assign(_date=dates.loc[current.index])
-        .groupby("_date", sort=True)
-        .apply(lambda group: _aggregate_metric(group, metric), include_groups=False)
+    daily_values = pd.Series(
+        [
+            value
+            for _, group in current.assign(_date=dates.loc[current.index]).groupby(
+                "_date", sort=True
+            )
+            if (value := _aggregate_metric(group, metric)) is not None
+        ],
+        dtype=float,
     )
     persistent = int(
         (daily_values < baseline_value).sum()
         if relative < 0
         else (daily_values > baseline_value).sum()
     )
-    direction = "down" if relative < 0 else "up"
+    direction: Literal["up", "down"] = "down" if relative < 0 else "up"
     return [
         Finding(
             finding_id=f"{metric}_{direction}_001",

@@ -1,0 +1,35 @@
+name: Platform mapping
+description: Propose a canonical mapping for a platform export.
+title: "[Mapping]: "
+labels: [platform-mapping]
+body:
+  - type: markdown
+    attributes:
+      value: "Use synthetic headers and rows only. Never attach an account export or authentication material."
+  - type: input
+    id: platform
+    attributes:
+      label: Platform and export locale
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Mapping contract
+      description: List source-to-canonical fields, row grain, timezone, and daily versus cumulative counter semantics.
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Synthetic fixture
+      description: Provide a minimal generated example with no real account, content, or customer values.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: This proposal contains no secrets, personal data, customer data, or raw export rows.
+          required: true

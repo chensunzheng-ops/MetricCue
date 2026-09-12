@@ -1,0 +1,36 @@
+name: Bug report
+description: Report reproducible incorrect behavior using synthetic or anonymized data.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not submit secrets, personal data, customer data, or raw production exports."
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed and expected behavior
+      description: Include the command, exit code, and what should have happened.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: MetricCue version, Python version, and operating system.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link or paste only the smallest synthetic or irreversibly anonymized fixture and configuration.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I removed secrets, personal identifiers, customer data, and raw production exports.
+          required: true

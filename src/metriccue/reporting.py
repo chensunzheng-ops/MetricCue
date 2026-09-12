@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import matplotlib
 
@@ -51,7 +51,10 @@ def _write_change_chart(findings: list[Finding], charts: Path) -> Path | None:
     charts.mkdir(parents=True, exist_ok=True)
     path = charts / "finding_changes.svg"
     figure, axis = plt.subplots(figsize=(8, max(3, len(usable) * 0.5)))
-    axis.barh([item.finding_id for item in usable], [item.relative_change * 100 for item in usable])
+    axis.barh(
+        [item.finding_id for item in usable],
+        [cast(float, item.relative_change) * 100 for item in usable],
+    )
     axis.axvline(0, color="black", linewidth=0.8)
     axis.set_xlabel("Relative change (%)")
     figure.tight_layout()

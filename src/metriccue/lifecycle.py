@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import cast
 
 import pandas as pd
 
@@ -51,7 +52,7 @@ def lifecycle_summary(frame: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
         for age, values in grouped:
             records.append(
                 {
-                    "content_age_days": int(age),
+                    "content_age_days": int(cast(float, age)),
                     "metric": metric,
                     "count": int(values.count()),
                     "median": float(values.median()),

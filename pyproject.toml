@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "metriccue"
-version = "0.1.0.dev0"
+version = "0.1.0rc1"
 description = "Evidence-first diagnostics for content operations data"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -41,6 +41,7 @@ addopts = "--strict-markers"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+extend-exclude = ["docs/superpowers"]
 
 [tool.mypy]
 python_version = "3.11"
