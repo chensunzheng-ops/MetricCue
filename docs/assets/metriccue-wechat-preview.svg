@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">MetricCue 合成公众号案例诊断预览</title>
+  <desc id="desc">互动率、阅读量和审核等待时间的证据卡片，以及下一步实验建议。</desc>
+  <rect width="1200" height="680" rx="28" fill="#f4f7fb"/>
+  <rect x="36" y="36" width="1128" height="608" rx="22" fill="#ffffff" stroke="#dce5f2"/>
+  <text x="76" y="94" font-family="Arial, Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#12396b">MetricCue 诊断报告</text>
+  <text x="76" y="128" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">合成公众号案例 · 当前 7 天 vs 历史 28 天</text>
+  <rect x="76" y="164" width="316" height="150" rx="16" fill="#fff5f5" stroke="#ffd2d2"/>
+  <text x="100" y="202" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#7f1d1d">互动率</text>
+  <text x="100" y="254" font-family="Arial, Microsoft YaHei, sans-serif" font-size="40" font-weight="700" fill="#c2413b">-46.4%</text>
+  <text x="100" y="286" font-family="Consolas, monospace" font-size="14" fill="#7f1d1d">engagement_rate_down_001</text>
+  <rect x="442" y="164" width="316" height="150" rx="16" fill="#fff8ed" stroke="#f8d7a4"/>
+  <text x="466" y="202" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#7c4a03">阅读量</text>
+  <text x="466" y="254" font-family="Arial, Microsoft YaHei, sans-serif" font-size="40" font-weight="700" fill="#c56b12">-55.4%</text>
+  <text x="466" y="286" font-family="Consolas, monospace" font-size="14" fill="#7c4a03">views_down_001</text>
+  <rect x="808" y="164" width="316" height="150" rx="16" fill="#eef5ff" stroke="#c7dcff"/>
+  <text x="832" y="202" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#173f73">审核等待</text>
+  <text x="832" y="254" font-family="Arial, Microsoft YaHei, sans-serif" font-size="40" font-weight="700" fill="#2563a6">+190.0%</text>
+  <text x="832" y="286" font-family="Consolas, monospace" font-size="14" fill="#173f73">review_wait_hours_up_001</text>
+  <text x="76" y="366" font-family="Arial, Microsoft YaHei, sans-serif" font-size="21" font-weight="700" fill="#12396b">证据链</text>
+  <circle cx="94" cy="410" r="8" fill="#2c6db2"/>
+  <text x="118" y="417" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#334155">总体互动率连续 7 天低于基准窗口</text>
+  <circle cx="94" cy="454" r="8" fill="#2c6db2"/>
+  <text x="118" y="461" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#334155">动画资讯主题阅读量中位数下降 42.2%</text>
+  <circle cx="94" cy="498" r="8" fill="#2c6db2"/>
+  <text x="118" y="505" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#334155">审核等待中位数从 20 小时升至 58 小时</text>
+  <rect x="684" y="358" width="440" height="172" rx="16" fill="#edf8f3" stroke="#b9e4d0"/>
+  <text x="712" y="396" font-family="Arial, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#116149">下一步实验</text>
+  <text x="712" y="432" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">测试预设的快速审核通道，同时保持发布时间不变；</text>
+  <text x="712" y="462" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">主要指标：审核等待时间。</text>
+  <text x="712" y="500" font-family="Consolas, monospace" font-size="14" fill="#397461">evidence: review_wait_hours_up_001</text>
+  <line x1="76" y1="566" x2="1124" y2="566" stroke="#dce5f2"/>
+  <text x="76" y="606" font-family="Arial, Microsoft YaHei, sans-serif" font-size="15" fill="#64748b">全部数据为确定性合成数据 · 信号表示观察性关联，不构成因果结论</text>
+</svg>

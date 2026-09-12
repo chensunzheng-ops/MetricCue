@@ -1,0 +1,7 @@
+data:
+  counter_mode: daily
+  timezone: Asia/Shanghai
+analysis:
+  current_window_days: 7
+  baseline_window_days: 28
+  minimum_contents: 3
