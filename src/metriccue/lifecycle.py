@@ -45,7 +45,9 @@ def lifecycle_summary(frame: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
     for metric in metrics:
         if metric not in frame:
             continue
-        grouped = frame.dropna(subset=["content_age_days", metric]).groupby("content_age_days")[metric]
+        grouped = frame.dropna(subset=["content_age_days", metric]).groupby("content_age_days")[
+            metric
+        ]
         for age, values in grouped:
             records.append(
                 {

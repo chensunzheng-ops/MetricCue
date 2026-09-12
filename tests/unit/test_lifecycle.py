@@ -17,8 +17,20 @@ def test_window_excludes_incomplete_today() -> None:
 
 
 def test_content_age_aligns_items_by_days_since_publish() -> None:
-    performance = pd.DataFrame([{"date": "2026-09-03", "platform": "xhs", "account_id": "a1", "content_id": "n1", "views": 20}])
-    content = pd.DataFrame([{"platform": "xhs", "account_id": "a1", "content_id": "n1", "published_at": "2026-09-01"}])
+    performance = pd.DataFrame(
+        [
+            {
+                "date": "2026-09-03",
+                "platform": "xhs",
+                "account_id": "a1",
+                "content_id": "n1",
+                "views": 20,
+            }
+        ]
+    )
+    content = pd.DataFrame(
+        [{"platform": "xhs", "account_id": "a1", "content_id": "n1", "published_at": "2026-09-01"}]
+    )
     result = align_content_age(performance, content)
     assert result.loc[0, "content_age_days"] == 2
 

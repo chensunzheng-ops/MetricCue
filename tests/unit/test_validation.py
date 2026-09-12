@@ -83,8 +83,7 @@ def test_observation_before_publication_is_warning() -> None:
     )
 
     assert any(
-        issue.code == "observation_before_publication"
-        and issue.severity is Severity.WARNING
+        issue.code == "observation_before_publication" and issue.severity is Severity.WARNING
         for issue in issues
     )
 

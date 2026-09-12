@@ -41,9 +41,7 @@ def test_daily_values_are_not_differenced() -> None:
 
 
 def test_zero_denominator_produces_missing_metric() -> None:
-    frame = pd.DataFrame(
-        [{"views": 0, "likes": 1, "comments": 0, "saves": 0, "shares": 0}]
-    )
+    frame = pd.DataFrame([{"views": 0, "likes": 1, "comments": 0, "saves": 0, "shares": 0}])
 
     result = compute_metrics(frame, MetricCueConfig())
 
@@ -51,9 +49,7 @@ def test_zero_denominator_produces_missing_metric() -> None:
 
 
 def test_interactions_and_default_engagement_rate_are_calculated() -> None:
-    frame = pd.DataFrame(
-        [{"views": 100, "likes": 4, "comments": 2, "saves": 3, "shares": 1}]
-    )
+    frame = pd.DataFrame([{"views": 100, "likes": 4, "comments": 2, "saves": 3, "shares": 1}])
 
     result = compute_metrics(frame, MetricCueConfig())
 

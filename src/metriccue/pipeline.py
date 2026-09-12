@@ -11,6 +11,7 @@ from metriccue.ingestion import read_inputs
 from metriccue.lifecycle import build_analysis_window
 from metriccue.metrics import METRICS, compute_metrics, normalize_counters
 from metriccue.models import Finding, RunManifest, Severity
+from metriccue.production import analyze_production
 from metriccue.reporting import write_report
 from metriccue.validation import has_blocking_issues, validate_inputs
 
@@ -80,6 +81,18 @@ def run_analysis(request: AnalysisRequest) -> RunResult:
             if metric in measured:
                 findings.extend(detect_metric_anomalies(measured, metric, window, config))
         enabled.extend(["metrics", "anomalies"])
+        if tables.production is not None and "published_at" in tables.production:
+            production = tables.production.copy()
+            published = production["published_at"].dt.normalize()
+            production["period"] = "outside"
+            production.loc[
+                published.between(window.baseline_start, window.baseline_end), "period"
+            ] = "baseline"
+            production.loc[
+                published.between(window.current_start, window.current_end), "period"
+            ] = "current"
+            findings.extend(analyze_production(production, config.analysis.minimum_contents))
+            enabled.append("production")
     issue_payload = [item.model_dump(mode="json") for item in issues]
     finding_payload = [item.model_dump(mode="json") for item in findings]
     hashes = {"performance": _hash_file(request.performance_path)}
