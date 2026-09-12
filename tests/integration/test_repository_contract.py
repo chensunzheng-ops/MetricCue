@@ -31,3 +31,4 @@ def test_package_identifies_the_validated_release_stage() -> None:
     metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
     assert metadata["project"]["version"] == "0.1.0rc1"
+    assert "/work" in metadata["tool"]["hatch"]["build"]["exclude"]

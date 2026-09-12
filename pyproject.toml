@@ -32,6 +32,18 @@ dev = [
 [project.scripts]
 metriccue = "metriccue.cli:app"
 
+[tool.hatch.build]
+exclude = [
+  "/.coverage",
+  "/.mypy_cache",
+  "/.pytest_cache",
+  "/.ruff_cache",
+  "/.worktrees",
+  "/dist",
+  "/outputs",
+  "/work",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/metriccue"]
 
