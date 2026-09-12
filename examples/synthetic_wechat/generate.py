@@ -6,7 +6,6 @@ from pathlib import Path
 from random import Random
 
 ROOT = Path(__file__).parent
-RANDOM = Random(20260913)
 
 
 def write(name: str, fields: list[str], rows: list[dict[str, object]]) -> None:
@@ -17,6 +16,7 @@ def write(name: str, fields: list[str], rows: list[dict[str, object]]) -> None:
 
 
 def main() -> None:
+    random = Random(20260913)
     performance: list[dict[str, object]] = []
     content: list[dict[str, object]] = []
     production: list[dict[str, object]] = []
@@ -38,7 +38,7 @@ def main() -> None:
             "animation_news": 0.58,
         }[topic]
         views = int(
-            baseline_views * (current_multiplier if current else 1.0) + RANDOM.randint(-35, 35)
+            baseline_views * (current_multiplier if current else 1.0) + random.randint(-35, 35)
         )
         engagement_rate = 0.065 if current else 0.12
         content_id = f"article-{index:03d}"

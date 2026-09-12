@@ -26,8 +26,8 @@
   <text x="118" y="505" font-family="Arial, Microsoft YaHei, sans-serif" font-size="17" fill="#334155">审核等待中位数从 20 小时升至 58 小时</text>
   <rect x="684" y="358" width="440" height="172" rx="16" fill="#edf8f3" stroke="#b9e4d0"/>
   <text x="712" y="396" font-family="Arial, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#116149">下一步实验</text>
-  <text x="712" y="432" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">设置快速审核通道，保持选题和发布时间不变；</text>
-  <text x="712" y="462" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">观察审核等待、阅读量与互动率，不预设因果。</text>
+  <text x="712" y="432" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">测试预设的快速审核通道，同时保持发布时间不变；</text>
+  <text x="712" y="462" font-family="Arial, Microsoft YaHei, sans-serif" font-size="16" fill="#274e43">主要指标：审核等待时间。</text>
   <text x="712" y="500" font-family="Consolas, monospace" font-size="14" fill="#397461">evidence: review_wait_hours_up_001</text>
   <line x1="76" y1="566" x2="1124" y2="566" stroke="#dce5f2"/>
   <text x="76" y="606" font-family="Arial, Microsoft YaHei, sans-serif" font-size="15" fill="#64748b">全部数据为确定性合成数据 · 信号表示观察性关联，不构成因果结论</text>
