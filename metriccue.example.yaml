@@ -1,0 +1,22 @@
+data:
+  counter_mode: cumulative
+  timezone: Asia/Shanghai
+
+analysis:
+  current_window_days: 7
+  baseline_window_days: 28
+  minimum_contents: 10
+  exclude_incomplete_today: true
+  compare_same_weekday: true
+
+columns:
+  date: 数据日期
+  content_id: 笔记ID
+  platform: 平台
+  account_id: 账号
+  impressions: 曝光数
+  views: 观看数
+  likes: 点赞数
+  saves: 收藏数
+
+denominators: {}
