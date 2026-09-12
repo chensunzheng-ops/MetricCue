@@ -14,6 +14,12 @@ performance.csv + content.csv + production.csv + metriccue.yaml
 
 当前版本为 `v0.1.0-rc1`。仓库示例使用完全合成的数据，包含指标下滑、累计计数器重置、缺失分群字段、异常值和审核等待变长等刻意植入的情况。
 
+## 示例报告
+
+![MetricCue 合成公众号案例诊断预览](docs/assets/metriccue-wechat-preview.svg)
+
+上图来自仓库内完全合成的公众号风格案例，展示了总体指标、主题分群和生产流程信号如何通过 `finding_id` 形成可核验的证据链。完整运行方法见[合成公众号案例](examples/synthetic_wechat/README.md)。
+
 ## 三步开始
 
 需要 Python 3.11–3.13。Windows PowerShell 与 Ubuntu 均作为 CI 目标。
@@ -50,5 +56,7 @@ MetricCue 不支持登录或抓取平台、不替代数据仓库、不自动发�
 - [用户测试协议](docs/user-test-protocol.md)
 - [Codex Skill](skills/metriccue/SKILL.md)
 - [合成示例](examples/synthetic_xhs/README.md)
+- [合成公众号案例](examples/synthetic_wechat/README.md)
+- [项目介绍与简历描述参考](docs/portfolio.md)
 
 代码以 MIT 许可证发布。RC 阶段欢迎提交匿名化的缺陷、平台字段映射和诊断规则建议。

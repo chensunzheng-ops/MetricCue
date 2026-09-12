@@ -34,6 +34,6 @@ MetricCue does not log in to or scrape platforms, replace a warehouse, automate 
 
 Never submit real customer data, secrets, phone numbers, email addresses, or other identifying information. A suspected sensitive column produces a validation warning and must block model handoff until removed or anonymized.
 
-Read the [data contract](docs/data-contract.md), [methodology](docs/methodology.md), [privacy model](docs/privacy.md), [contribution guide](docs/contributing.md), and [user-test protocol](docs/user-test-protocol.md). The repository also includes an evidence-safe [Codex Skill](skills/metriccue/SKILL.md).
+Read the [data contract](docs/data-contract.md), [methodology](docs/methodology.md), [privacy model](docs/privacy.md), [contribution guide](docs/contributing.md), and [user-test protocol](docs/user-test-protocol.md). The repository also includes an evidence-safe [Codex Skill](skills/metriccue/SKILL.md), the original [synthetic Xiaohongshu-style case](examples/synthetic_xhs/README.md), and a second [synthetic WeChat-style content-operations case](examples/synthetic_wechat/README.md).
 
 Licensed under MIT.
