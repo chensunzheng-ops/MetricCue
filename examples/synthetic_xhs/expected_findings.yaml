@@ -1,0 +1,11 @@
+required_metrics:
+  - completion_rate
+  - follow_conversion
+  - views
+  - review_wait_hours
+required_validation_codes:
+  - counter_reset
+  - missing_segment_value
+forbidden_high_confidence_metrics:
+  - click_through_rate
+  - order_conversion
