@@ -26,3 +26,26 @@ def test_markdown_cites_finding_id_and_limitations() -> None:
 
 def test_empty_findings_explain_insufficient_evidence() -> None:
     assert "当前数据不足以形成可靠诊断" in render_markdown([], [], {})
+
+
+def test_report_renders_lifecycle_and_contribution_metadata() -> None:
+    report = render_markdown(
+        [],
+        [],
+        {
+            "lifecycle_summary": [
+                {"content_age_days": 1, "metric": "views", "count": 12, "median": 80}
+            ],
+            "contribution_summaries": [
+                {
+                    "dimension": "topic",
+                    "metric": "views",
+                    "within_effect": -10,
+                    "mix_effect": 2,
+                }
+            ],
+        },
+    )
+
+    assert "Day 1" in report
+    assert "within=-10" in report

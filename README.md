@@ -21,7 +21,7 @@ performance.csv + content.csv + production.csv + metriccue.yaml
 ```bash
 python -m pip install -e ".[dev]"
 metriccue validate examples/synthetic_xhs/performance.csv --config examples/synthetic_xhs/metriccue.yaml --json
-metriccue analyze examples/synthetic_xhs/performance.csv --content examples/synthetic_xhs/content.csv --production examples/synthetic_xhs/production.csv --config examples/synthetic_xhs/metriccue.yaml --output runs
+metriccue analyze examples/synthetic_xhs/performance.csv --content examples/synthetic_xhs/content.csv --production examples/synthetic_xhs/production.csv --config examples/synthetic_xhs/metriccue.yaml --as-of 2026-09-12 --output runs
 ```
 
 命令会打印本次运行目录。打开其中的 `report.md` 查看摘要；`evidence.json` 是结构化证据源，每条数值信号都有稳定的 `finding_id`。也可以运行 `metriccue init`、`metriccue findings` 和 `metriccue report` 创建模板或检查已有运行。
@@ -38,7 +38,7 @@ metriccue analyze examples/synthetic_xhs/performance.csv --content examples/synt
 - `recommendations.json`：当前 RC 保留的结构化推荐接口。
 - `report.md` 与 `charts/*.svg`：便于阅读和分享的聚合报告。
 
-MetricCue 不支持登录或抓取平台、不替代数据仓库、不自动发布/投放/删除内容、不把观察性关联写成因果结论，也不提供虚构的行业基准。分群比较和构成分解目前提供 Python 分析原语，尚未接入 CLI 报告主流程。它不会承诺节省多少时间；该结论要等真实用户测试后再衡量。
+MetricCue 不支持登录或抓取平台、不替代数据仓库、不自动发布/投放/删除内容、不把观察性关联写成因果结论，也不提供虚构的行业基准。它不会承诺节省多少时间；该结论要等真实用户测试后再衡量。
 
 所有计算默认在本机完成。请不要提交真实客户数据、密钥、手机号、邮箱或可识别个人的信息。发现疑似敏感列时，本地校验会警告，任何模型交接都应停止，直到字段被删除或匿名化。详见[隐私说明](docs/privacy.md)。
 

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from metriccue.segments import decompose_change, detect_aggregate_reversal
+from metriccue.segments import compare_segments, decompose_change, detect_aggregate_reversal
 
 
 def test_decomposition_separates_mix_and_within_segment_change() -> None:
@@ -25,3 +25,39 @@ def test_detects_aggregate_direction_reversal() -> None:
 def test_does_not_report_reversal_when_segments_are_mixed() -> None:
     grouped = pd.DataFrame({"baseline": [0.10, 0.04], "current": [0.11, 0.03]})
     assert not detect_aggregate_reversal(grouped, aggregate_change=-0.01)
+
+
+def test_repeated_daily_rows_do_not_inflate_segment_content_sample() -> None:
+    frame = pd.DataFrame(
+        [
+            {"content_id": "n1", "topic": "a", "period": period, "views": value}
+            for period, value in (("baseline", 100), ("current", 80), ("current", 75))
+        ]
+    )
+
+    result = compare_segments(frame, "topic", "views", "period", minimum_contents=2)
+
+    assert result[0].sample_size == 1
+    assert not result[0].eligible
+
+
+def test_content_identity_includes_platform_and_account() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "platform": platform,
+                "account_id": "a1",
+                "content_id": "shared",
+                "topic": "a",
+                "period": period,
+                "views": value,
+            }
+            for platform in ("xhs", "video")
+            for period, value in (("baseline", 100), ("current", 80))
+        ]
+    )
+
+    result = compare_segments(frame, "topic", "views", "period", minimum_contents=2)
+
+    assert result[0].sample_size == 2
+    assert result[0].eligible

@@ -49,8 +49,19 @@ def compare_segments(
     frame: pd.DataFrame, dimension: str, metric: str, period_column: str, minimum_contents: int
 ) -> list[SegmentComparison]:
     results: list[SegmentComparison] = []
-    total = len(frame)
-    for segment, group in frame.dropna(subset=[dimension, metric]).groupby(dimension):
+    clean = frame.dropna(subset=[dimension, metric])
+    identity = [name for name in ("platform", "account_id", "content_id") if name in clean]
+    if "content_id" in identity:
+        clean = (
+            clean.groupby([dimension, *identity, period_column])[metric]
+            .median()
+            .to_frame(name=metric)
+            .reset_index()
+        )
+        total = len(clean[identity].drop_duplicates())
+    else:
+        total = len(clean)
+    for segment, group in clean.groupby(dimension):
         baseline = pd.to_numeric(
             group.loc[group[period_column].eq("baseline"), metric], errors="coerce"
         ).dropna()
@@ -65,15 +76,30 @@ def compare_segments(
             SegmentComparison(
                 dimension,
                 str(segment),
-                len(current),
+                int(
+                    len(group.loc[group[period_column].eq("current"), identity].drop_duplicates())
+                    if "content_id" in identity
+                    else len(current)
+                ),
                 current_median,
                 base_median,
                 float(current.quantile(0.25)),
                 float(current.quantile(0.75)),
                 None if base_median == 0 else (current_median - base_median) / base_median,
                 None,
-                len(group) / total if total else 0.0,
-                len(current) >= minimum_contents,
+                (
+                    len(group[identity].drop_duplicates()) / total
+                    if total and "content_id" in identity
+                    else len(group) / total
+                    if total
+                    else 0.0
+                ),
+                (
+                    len(group.loc[group[period_column].eq("current"), identity].drop_duplicates())
+                    if "content_id" in identity
+                    else len(current)
+                )
+                >= minimum_contents,
             )
         )
     return results

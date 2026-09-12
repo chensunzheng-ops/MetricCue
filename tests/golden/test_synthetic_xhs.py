@@ -23,6 +23,10 @@ def test_planted_problems_are_detected_without_false_high_confidence(tmp_path: P
     )
     findings = json.loads((result.run_dir / "evidence.json").read_text(encoding="utf-8"))
     validation = json.loads((result.run_dir / "validation.json").read_text(encoding="utf-8"))
+    manifest = json.loads((result.run_dir / "manifest.json").read_text(encoding="utf-8"))
+    recommendations = json.loads(
+        (result.run_dir / "recommendations.json").read_text(encoding="utf-8")
+    )
     metrics = {item["metric"] for item in findings}
     validation_codes = {item["code"] for item in validation}
     assert set(expected["required_metrics"]).issubset(metrics)
@@ -32,3 +36,6 @@ def test_planted_problems_are_detected_without_false_high_confidence(tmp_path: P
         and item["confidence"] == "high"
         for item in findings
     )
+    assert {"lifecycle", "segments", "contribution"}.issubset(manifest["enabled_modules"])
+    assert 2 <= len(recommendations) <= 4
+    assert all(item["finding_ids"] for item in recommendations)

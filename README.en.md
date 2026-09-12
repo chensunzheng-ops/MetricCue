@@ -21,7 +21,7 @@ Python 3.11–3.13 is required. Windows PowerShell and Ubuntu are CI targets.
 ```bash
 python -m pip install -e ".[dev]"
 metriccue validate examples/synthetic_xhs/performance.csv --config examples/synthetic_xhs/metriccue.yaml --json
-metriccue analyze examples/synthetic_xhs/performance.csv --content examples/synthetic_xhs/content.csv --production examples/synthetic_xhs/production.csv --config examples/synthetic_xhs/metriccue.yaml --output runs
+metriccue analyze examples/synthetic_xhs/performance.csv --content examples/synthetic_xhs/content.csv --production examples/synthetic_xhs/production.csv --config examples/synthetic_xhs/metriccue.yaml --as-of 2026-09-12 --output runs
 ```
 
 The command prints an immutable run directory. Read `report.md` for the summary and `evidence.json` for structured findings with stable `finding_id` values. `metriccue init`, `metriccue findings`, and `metriccue report` support template creation and later inspection.
@@ -30,7 +30,7 @@ The command prints an immutable run directory. Read `report.md` for the summary 
 
 A run contains a manifest with hashes and provenance, validation issues, structured evidence, a reserved recommendations file, a Markdown report, and non-empty SVG charts. Calculations stay local by default.
 
-MetricCue does not log in to or scrape platforms, replace a warehouse, automate publishing/advertising/deletion, claim that observational associations are causal, or invent industry benchmarks. Segment comparison and mix-decomposition primitives exist in the Python package but are not yet connected to the CLI report pipeline. No time-saving claim is made before the user-test protocol produces evidence.
+MetricCue does not log in to or scrape platforms, replace a warehouse, automate publishing/advertising/deletion, claim that observational associations are causal, or invent industry benchmarks. No time-saving claim is made before the user-test protocol produces evidence.
 
 Never submit real customer data, secrets, phone numbers, email addresses, or other identifying information. A suspected sensitive column produces a validation warning and must block model handoff until removed or anonymized.
 

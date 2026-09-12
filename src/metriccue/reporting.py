@@ -11,9 +11,11 @@ from metriccue.models import Finding, ValidationIssue
 
 
 def render_markdown(
-    findings: list[Finding], issues: list[ValidationIssue], metadata: dict[str, Any]
+    findings: list[Finding],
+    issues: list[ValidationIssue],
+    metadata: dict[str, Any],
+    recommendations: list[dict[str, Any]] | None = None,
 ) -> str:
-    del metadata
     lines = ["# MetricCue 诊断报告", "", "## 执行摘要", ""]
     if not findings:
         lines.append("当前数据不足以形成可靠诊断。请先查看数据健康部分并补充数据。")
@@ -39,8 +41,46 @@ def render_markdown(
         for limitation in finding.limitations:
             lines.append(f"- 局限：{limitation}")
         lines.append("")
-    for heading in ("异常贡献", "内容洞察", "生产效率", "实验建议", "局限性"):
-        lines.extend([f"## {heading}", "", "本次运行暂无更多可报告内容。", ""])
+    lines.extend(["## 异常贡献", ""])
+    contributions = metadata.get("contribution_summaries", [])
+    if contributions:
+        for item in contributions:
+            lines.append(
+                f"- {item['dimension']} / {item['metric']}：within={item['within_effect']:.4g}，mix={item['mix_effect']:.4g}。"
+            )
+    else:
+        lines.append("本次运行暂无可报告的合格分群贡献。")
+    lines.extend(["", "## 内容洞察", ""])
+    lifecycle = metadata.get("lifecycle_summary", [])
+    if lifecycle:
+        for item in lifecycle[:12]:
+            lines.append(
+                f"- Day {item['content_age_days']} / {item['metric']}：中位数 {item['median']:.4g}，样本 {item['count']}。"
+            )
+    else:
+        lines.append("本次运行没有足够的内容生命周期数据。")
+    lines.extend(["", "## 生产效率", ""])
+    production = [
+        item
+        for item in findings
+        if item.metric.endswith(("_hours", "_cost")) or item.metric == "revision_count"
+    ]
+    if production:
+        for item in production:
+            lines.append(
+                f"- `{item.finding_id}`：{item.metric} 相对变化 {item.relative_change:+.1%}。"
+            )
+    else:
+        lines.append("本次运行暂无生产效率信号。")
+    lines.append("")
+    lines.extend(["## 实验建议", ""])
+    if recommendations:
+        for item in recommendations:
+            finding_ids = ", ".join(f"`{value}`" for value in item["finding_ids"])
+            lines.append(f"- {item['hypothesis']} 证据：{finding_ids}")
+    else:
+        lines.append("本次运行暂无更多可报告内容。")
+    lines.extend(["", "## 局限性", "", "所有信号仅表示观察性关联，不构成因果结论。", ""])
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -72,7 +112,20 @@ def write_report(run_dir: Path) -> Path:
         ValidationIssue.model_validate(item)
         for item in json.loads((run_dir / "validation.json").read_text(encoding="utf-8"))
     ]
+    recommendation_path = run_dir / "recommendations.json"
+    recommendations: list[dict[str, Any]] = (
+        json.loads(recommendation_path.read_text(encoding="utf-8"))
+        if recommendation_path.exists()
+        else []
+    )
+    manifest_path = run_dir / "manifest.json"
+    manifest = (
+        json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
+    )
     report = run_dir / "report.md"
-    report.write_text(render_markdown(findings, issues, {}), encoding="utf-8")
+    report.write_text(
+        render_markdown(findings, issues, manifest.get("metadata", {}), recommendations),
+        encoding="utf-8",
+    )
     _write_change_chart(findings, run_dir / "charts")
     return report

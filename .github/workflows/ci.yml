@@ -36,7 +36,11 @@ jobs:
             --content examples/synthetic_xhs/content.csv \
             --production examples/synthetic_xhs/production.csv \
             --config examples/synthetic_xhs/metriccue.yaml \
+            --as-of 2026-09-12 \
             --output "${RUNNER_TEMP}/metriccue-release-check"
+      - name: Validate bundled Skill
+        shell: bash
+        run: python scripts/validate_skill.py skills/metriccue
       - name: Scan generated artifacts for email and phone patterns
         shell: bash
         run: |

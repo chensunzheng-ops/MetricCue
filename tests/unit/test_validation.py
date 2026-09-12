@@ -127,3 +127,32 @@ def test_missing_segment_value_is_warning() -> None:
     )
 
     assert any(issue.code == "missing_segment_value" for issue in issues)
+
+
+def test_missing_required_identifier_is_blocking() -> None:
+    issues = validate_inputs(InputTables(performance=_frame(content_id=pd.NA)), MetricCueConfig())
+
+    assert any(item.code == "missing_required_identifier" for item in issues)
+    assert has_blocking_issues(issues)
+
+
+def test_duplicate_content_key_is_blocking() -> None:
+    content = pd.DataFrame(
+        [
+            {"platform": "xhs", "account_id": "a1", "content_id": "n1"},
+            {"platform": "xhs", "account_id": "a1", "content_id": "n1"},
+        ]
+    )
+
+    issues = validate_inputs(InputTables(performance=_frame(), content=content), MetricCueConfig())
+
+    assert any(item.code == "duplicate_content_key" for item in issues)
+    assert has_blocking_issues(issues)
+
+
+def test_sensitive_value_is_detected_even_with_neutral_column_name() -> None:
+    issues = validate_inputs(
+        InputTables(performance=_frame(note="person@example.com")), MetricCueConfig()
+    )
+
+    assert any(item.code == "sensitive_value" for item in issues)

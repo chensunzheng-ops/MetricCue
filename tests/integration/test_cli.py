@@ -28,3 +28,28 @@ def test_help_lists_public_commands() -> None:
     assert result.exit_code == 0
     for command in ("init", "validate", "analyze", "findings", "report"):
         assert command in result.stdout
+
+
+def test_missing_input_and_invalid_config_return_two(tmp_path: Path) -> None:
+    missing = runner.invoke(app, ["validate", str(tmp_path / "missing.csv")])
+    assert missing.exit_code == 2
+
+    source = tmp_path / "performance.csv"
+    source.write_text(
+        "date,content_id,platform,account_id,views\n2026-09-01,n1,xhs,a1,10\n",
+        encoding="utf-8",
+    )
+    config = tmp_path / "bad.yaml"
+    config.write_text("unknown: true\n", encoding="utf-8")
+    invalid = runner.invoke(app, ["validate", str(source), "--config", str(config)])
+    assert invalid.exit_code == 2
+
+
+def test_findings_rejects_partial_run(tmp_path: Path) -> None:
+    partial = tmp_path / "run.partial"
+    partial.mkdir()
+    (partial / "evidence.json").write_text("[]", encoding="utf-8")
+
+    result = runner.invoke(app, ["findings", str(partial), "--json"])
+
+    assert result.exit_code == 2

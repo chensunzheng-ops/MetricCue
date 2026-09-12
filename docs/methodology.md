@@ -22,7 +22,7 @@ A metric becomes a signal only when the current sample reaches `minimum_contents
 
 Confidence is a transparent heuristic based on sample size, effect magnitude, persistence, and data-quality score. Fewer than 10 observations or data quality below 0.8 is low confidence. High confidence requires all four stronger conditions: at least 30 observations, at least 20% absolute relative effect, at least 3 persistent days, and data quality at least 0.95. Intermediate support is medium. Confidence is not a p-value or causal probability.
 
-The library exposes median/MAD robust z-scores, with IQR fallback when MAD is zero. It also exposes segment comparisons, symmetric within/mix decomposition, and aggregate-reversal detection. In `v0.1.0-rc1`, these segment primitives are tested but not yet emitted by the CLI pipeline.
+The engine records median/MAD robust scores, with IQR fallback when MAD is zero. The CLI pipeline also runs content-age summaries, segment comparisons, symmetric within/mix decomposition, and aggregate-reversal checks when the required metadata exists.
 
 ## Production diagnostics
 

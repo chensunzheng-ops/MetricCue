@@ -26,6 +26,9 @@ SENSITIVE_NAME = re.compile(
     r"(^|_)(phone|mobile|email|e-mail|full_name|real_name|姓名|手机|电话|邮箱)($|_)",
     re.IGNORECASE,
 )
+SENSITIVE_VALUE = re.compile(
+    r"(?:[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|(?<!\d)(?:\+?86[- ]?)?1[3-9]\d{9}(?!\d))"
+)
 
 
 def _issue(
@@ -69,6 +72,20 @@ def _validate_performance(frame: pd.DataFrame) -> list[ValidationIssue]:
                 repair="Add at least one supported metric column.",
             )
         )
+
+    identifier_columns = sorted(REQUIRED_DIMENSIONS - {"date"})
+    for column in identifier_columns:
+        if column in frame and frame[column].isna().any():
+            issues.append(
+                _issue(
+                    "missing_required_identifier",
+                    Severity.ERROR,
+                    f"Required identifier '{column}' contains missing values.",
+                    "performance",
+                    frame.index[frame[column].isna()].tolist(),
+                    "Populate every required identifier before analysis.",
+                )
+            )
 
     key = ["platform", "account_id", "content_id", "date"]
     if set(key).issubset(frame.columns):
@@ -155,6 +172,42 @@ def _validate_content_relationship(tables: InputTables) -> list[ValidationIssue]
     if content is None:
         return []
     issues: list[ValidationIssue] = []
+    join_key = ["platform", "account_id", "content_id"]
+    missing_keys = sorted(set(join_key) - set(content.columns))
+    if missing_keys:
+        return [
+            _issue(
+                "missing_content_keys",
+                Severity.ERROR,
+                f"Content table is missing join keys: {', '.join(missing_keys)}",
+                "content",
+                repair="Add every content join key.",
+            )
+        ]
+    for column in join_key:
+        if content[column].isna().any():
+            issues.append(
+                _issue(
+                    "missing_required_identifier",
+                    Severity.ERROR,
+                    f"Content identifier '{column}' contains missing values.",
+                    "content",
+                    content.index[content[column].isna()].tolist(),
+                    "Populate every content join key.",
+                )
+            )
+    duplicate_rows = content.index[content.duplicated(join_key, keep=False)].tolist()
+    if duplicate_rows:
+        issues.append(
+            _issue(
+                "duplicate_content_key",
+                Severity.ERROR,
+                "Content join keys are not unique.",
+                "content",
+                duplicate_rows,
+                "Keep one metadata row per platform/account/content item.",
+            )
+        )
     available_segments = SEGMENT_COLUMNS.intersection(content.columns)
     for column in sorted(available_segments):
         if content[column].isna().any():
@@ -169,7 +222,6 @@ def _validate_content_relationship(tables: InputTables) -> list[ValidationIssue]
                 )
             )
 
-    join_key = ["platform", "account_id", "content_id"]
     if set(join_key + ["published_at"]).issubset(content.columns) and set(
         join_key + ["date"]
     ).issubset(tables.performance.columns):
@@ -212,6 +264,20 @@ def _validate_privacy(tables: InputTables) -> list[ValidationIssue]:
                         f"Column '{column}' may contain personal data; local analysis may continue but model handoff is blocked.",
                         table_name,
                         repair="Remove, anonymize, or explicitly exclude the column.",
+                    )
+                )
+        for column in frame.select_dtypes(include=["object", "string"]).columns:
+            values = frame[column].dropna().astype(str)
+            affected = values.index[values.str.contains(SENSITIVE_VALUE, regex=True)].tolist()
+            if affected:
+                issues.append(
+                    _issue(
+                        "sensitive_value",
+                        Severity.WARNING,
+                        f"Column '{column}' contains email- or phone-like values; model handoff is blocked.",
+                        table_name,
+                        affected,
+                        "Remove or anonymize sensitive values before sharing artifacts.",
                     )
                 )
     return issues

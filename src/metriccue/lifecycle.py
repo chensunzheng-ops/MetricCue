@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import cast
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -18,13 +19,23 @@ class AnalysisWindow:
 def build_analysis_window(
     dates: pd.Series, config: MetricCueConfig, now: datetime
 ) -> AnalysisWindow:
-    del dates
-    last_complete = pd.Timestamp(now.date())
+    valid_dates = pd.to_datetime(dates, errors="coerce").dropna()
+    if valid_dates.empty:
+        raise ValueError("Performance data has no valid dates.")
+    localized_now = (
+        now.replace(tzinfo=ZoneInfo(config.data.timezone))
+        if now.tzinfo is None
+        else now.astimezone(ZoneInfo(config.data.timezone))
+    )
+    last_complete = pd.Timestamp(localized_now.date())
     if config.analysis.exclude_incomplete_today:
         last_complete -= pd.Timedelta(days=1)
     current_start = last_complete - pd.Timedelta(days=config.analysis.current_window_days - 1)
     baseline_end = current_start - pd.Timedelta(days=1)
-    baseline_start = baseline_end - pd.Timedelta(days=config.analysis.baseline_window_days - 1)
+    baseline_days = config.analysis.baseline_window_days
+    if config.analysis.compare_same_weekday:
+        baseline_days = max(7, baseline_days - baseline_days % 7)
+    baseline_start = baseline_end - pd.Timedelta(days=baseline_days - 1)
     return AnalysisWindow(baseline_start, baseline_end, current_start, last_complete)
 
 

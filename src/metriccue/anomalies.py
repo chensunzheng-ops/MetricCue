@@ -20,6 +20,20 @@ def robust_z_score(values: pd.Series) -> pd.Series:
     return 0.67448975 * (numeric - median) / mad
 
 
+def robust_score_against(reference: pd.Series, value: float) -> float:
+    numeric = pd.to_numeric(reference, errors="coerce").dropna()
+    median = float(numeric.median())
+    mad = float((numeric - median).abs().median())
+    if mad > 0:
+        return 0.67448975 * (value - median) / mad
+    iqr = float(numeric.quantile(0.75) - numeric.quantile(0.25))
+    if iqr > 0:
+        return (value - median) / (iqr / 1.349)
+    if value == median:
+        return 0.0
+    return float("inf") if value > median else float("-inf")
+
+
 def confidence_for(
     sample_size: int, relative_effect: float, persistent_days: int, data_quality: float
 ) -> Confidence:
@@ -89,6 +103,19 @@ def detect_metric_anomalies(
         if relative < 0
         else (daily_values > baseline_value).sum()
     )
+    baseline_daily = pd.Series(
+        [
+            value
+            for _, group in baseline.assign(_date=dates.loc[baseline.index]).groupby(
+                "_date", sort=True
+            )
+            if (value := _aggregate_metric(group, metric)) is not None
+        ],
+        dtype=float,
+    )
+    robust_score: float | None = None
+    if len(baseline_daily) >= 4:
+        robust_score = robust_score_against(baseline_daily, current_value)
     direction: Literal["up", "down"] = "down" if relative < 0 else "up"
     return [
         Finding(
@@ -101,11 +128,24 @@ def detect_metric_anomalies(
             absolute_change=absolute,
             relative_change=relative,
             sample_size=sample_size,
-            confidence=confidence_for(sample_size, relative, persistent, data_quality),
+            confidence=(
+                Confidence.LOW
+                if robust_score is not None and abs(robust_score) < 2
+                else confidence_for(sample_size, relative, persistent, data_quality)
+            ),
             evidence=[
                 f"Current window differs from baseline by {relative:.1%}.",
                 f"Direction persisted on {persistent} current-window days.",
+                *(
+                    []
+                    if robust_score is None
+                    else [f"Robust median/MAD score is {robust_score:.2f}."]
+                ),
             ],
-            limitations=[],
+            limitations=(
+                []
+                if data_quality >= 0.8
+                else ["Data-quality warnings force low confidence for this signal."]
+            ),
         )
     ]
