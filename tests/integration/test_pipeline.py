@@ -22,6 +22,7 @@ def test_pipeline_writes_traceable_immutable_artifacts(
     assert manifest["input_hashes"]["performance"]
     assert all(item["finding_id"] for item in evidence)
     assert (first.run_dir / "validation.json").exists()
+    assert (first.run_dir / "report.md").exists()
 
 
 def test_blocking_data_preserves_validation_without_findings(tmp_path: Path) -> None:

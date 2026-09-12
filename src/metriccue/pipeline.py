@@ -11,6 +11,7 @@ from metriccue.ingestion import read_inputs
 from metriccue.lifecycle import build_analysis_window
 from metriccue.metrics import METRICS, compute_metrics, normalize_counters
 from metriccue.models import Finding, RunManifest, Severity
+from metriccue.reporting import write_report
 from metriccue.validation import has_blocking_issues, validate_inputs
 
 
@@ -111,5 +112,6 @@ def run_analysis(request: AnalysisRequest) -> RunResult:
     _write_json(partial / "validation.json", issue_payload)
     _write_json(partial / "evidence.json", finding_payload)
     _write_json(partial / "recommendations.json", [])
+    write_report(partial)
     partial.rename(final)
     return RunResult(final, len(findings), blocking)
