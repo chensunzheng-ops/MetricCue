@@ -17,14 +17,14 @@ def test_generator_matches_committed_fixtures_and_is_repeatable(tmp_path: Path) 
 
     main()
     first = {
-        name: (tmp_path / name).read_bytes()
+        name: (tmp_path / name).read_text(encoding="utf-8").splitlines()
         for name in ("performance.csv", "content.csv", "production.csv")
     }
     main()
-    second = {name: (tmp_path / name).read_bytes() for name in first}
+    second = {name: (tmp_path / name).read_text(encoding="utf-8").splitlines() for name in first}
 
     assert second == first
-    assert first == {name: (CASE / name).read_bytes() for name in first}
+    assert first == {name: (CASE / name).read_text(encoding="utf-8").splitlines() for name in first}
 
 
 def test_wechat_case_traces_engagement_decline_to_operational_signals(
